@@ -12,6 +12,7 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
+from dotenv import load_dotenv
 
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -19,8 +20,22 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from workflow import RadiologyWorkflowRunner
 from utils.helpers import setup_logging, save_json
 
+# Load environment variables from .env file
+load_dotenv()
+
 # Setup logging
 setup_logging()
+
+def check_environment_setup():
+    """Check if environment is properly configured."""
+    google_api_key = os.getenv("GOOGLE_API_KEY")
+    env_file_exists = os.path.exists(".env")
+    
+    return {
+        "api_key_available": bool(google_api_key),
+        "env_file_exists": env_file_exists,
+        "setup_instructions": not env_file_exists
+    }
 
 def main():
     """Main Streamlit application."""
@@ -68,14 +83,14 @@ def main():
     st.markdown('<h1 class="main-header">🫁 AI Radiology Assistant</h1>', unsafe_allow_html=True)
     
     # Warning disclaimer
-    st.markdown("""
-    <div class="warning-box">
-        <strong>⚠️ IMPORTANT DISCLAIMER:</strong><br>
-        This is a prototype AI system for educational and demonstration purposes only. 
-        All findings should be reviewed by qualified healthcare professionals before clinical use.
-        This system is NOT intended for actual medical diagnosis or treatment decisions.
-    </div>
-    """, unsafe_allow_html=True)
+    # st.markdown("""
+    # <div class="warning-box">
+    #     <strong>⚠️ IMPORTANT DISCLAIMER:</strong><br>
+    #     This is a prototype AI system for educational and demonstration purposes only. 
+    #     All findings should be reviewed by qualified healthcare professionals before clinical use.
+    #     This system is NOT intended for actual medical diagnosis or treatment decisions.
+    # </div>
+    # """, unsafe_allow_html=True)
     
     # Sidebar
     with st.sidebar:
@@ -90,25 +105,87 @@ def main():
         
                 # Analysis options
         st.subheader("Analysis Options")
-        generate_heatmaps = st.checkbox("Generate Heatmaps", value=True, help="Generate Grad-CAM heatmaps for explainability")
+        
+        # Check if Grad-CAM is available
+        try:
+            from models.grad_cam_tool import XRayGradCAM, GRADCAM_AVAILABLE
+            if GRADCAM_AVAILABLE:
+                from models.image_model import ChestXRayClassifier
+                test_classifier = ChestXRayClassifier()
+                test_gradcam = XRayGradCAM(test_classifier.model)
+                gradcam_available = True
+            else:
+                gradcam_available = False
+        except Exception as e:
+            gradcam_available = False
+        
+        if gradcam_available:
+            generate_heatmaps = st.checkbox("Generate Heatmaps", value=True, help="Generate Grad-CAM heatmaps for explainability")
+        else:
+            st.warning("⚠️ Grad-CAM not available - heatmaps disabled")
+            generate_heatmaps = False
+        
         save_results = st.checkbox("Save Results", value=False, help="Save analysis results to file")
         
-        # Environment variables
-        st.subheader("Environment")
-        google_api_key = st.text_input(
-            "Google AI API Key",
-            type="password",
-            help="Required for LLM-based report generation"
-        )
+        # Environment status
+        st.subheader("Environment Status")
+        env_status = check_environment_setup()
         
-        if google_api_key:
-            os.environ["GOOGLE_API_KEY"] = google_api_key
+        if env_status["api_key_available"]:
+            st.success("✅ Google AI API Key loaded from environment")
+            st.info("Full LLM features enabled")
+        elif env_status["setup_instructions"]:
+            st.error("❌ .env file not found")
+            st.markdown("""
+            **Setup Required:**
+            1. Copy `env.example` to `.env`
+            2. Add your Google AI API key to `.env`
+            3. Restart the application
+            """)
+            if st.button("📋 Show Setup Instructions"):
+                st.code("""
+# In your terminal, run:
+cp env.example .env
+
+# Then edit .env and add your API key:
+GOOGLE_API_KEY=your_actual_api_key_here
+GEMINI_MODEL=gemini-2.5-pro
+                """)
+        else:
+            st.warning("⚠️ Google AI API Key not found in .env file")
+            st.info("Basic analysis available (no LLM report generation)")
+            st.markdown("""
+            **To enable full features:**
+            1. Edit `.env` file
+            2. Add your Google AI API key
+            3. Restart the application
+            """)
     
     # Main content
     col1, col2 = st.columns([1, 1])
     
     with col1:
         st.header("📤 Input")
+        
+        # Show API key status in main area
+        env_status = check_environment_setup()
+        if not env_status["api_key_available"]:
+            if env_status["setup_instructions"]:
+                st.markdown("""
+                <div class="error-box">
+                    <strong>🔧 Setup Required</strong><br>
+                    Please create a `.env` file with your Google AI API key to enable full features.
+                    Basic image analysis will still work without the API key.
+                </div>
+                """, unsafe_allow_html=True)
+            else:
+                st.markdown("""
+                <div class="warning-box">
+                    <strong>🔑 API Key Required for Full Features</strong><br>
+                    To enable LLM-based report generation, please add your Google AI API key to the `.env` file.
+                    Basic image analysis will still work without the API key.
+                </div>
+                """, unsafe_allow_html=True)
         
         # File upload
         uploaded_file = st.file_uploader(
@@ -120,7 +197,7 @@ def main():
         # Display uploaded image
         if uploaded_file is not None:
             image = Image.open(uploaded_file)
-            st.image(image, caption="Uploaded X-ray Image", use_column_width=True)
+            st.image(image, caption="Uploaded X-ray Image", use_container_width=True)
             
             # Save uploaded file temporarily
             with tempfile.NamedTemporaryFile(delete=False, suffix='.jpg') as tmp_file:
@@ -140,6 +217,13 @@ def main():
         
         # Analysis button
         if uploaded_file is not None:
+            # Show analysis capabilities
+            env_status = check_environment_setup()
+            if env_status["api_key_available"]:
+                st.success("✅ Full analysis available: Image analysis + LLM report generation")
+            else:
+                st.info("ℹ️ Basic analysis available: Image analysis only (no LLM report)")
+            
             if st.button("🚀 Start Analysis", type="primary"):
                 with st.spinner("Running analysis..."):
                     try:
@@ -147,7 +231,7 @@ def main():
                         runner = RadiologyWorkflowRunner()
                         
                         # Run analysis
-                        results = runner.run_analysis(temp_image_path, symptoms)
+                        results = runner.run_analysis(temp_image_path, symptoms, generate_heatmaps=generate_heatmaps)
                         
                         # Display results
                         display_results(results)
@@ -268,6 +352,22 @@ def display_results(results):
         if full_report:
             with st.expander("📄 View Full Report"):
                 st.text(full_report)
+        else:
+            # Check if API key is available for report generation
+            env_status = check_environment_setup()
+            if not env_status["api_key_available"]:
+                st.info("""
+                **📄 Full Report Not Available**
+                
+                To enable comprehensive medical report generation, please add your Google AI API key to the `.env` file.
+                
+                **Steps:**
+                1. Copy `env.example` to `.env`
+                2. Add your Google AI API key: `GOOGLE_API_KEY=your_key_here`
+                3. Restart the application
+                
+                Basic image analysis results are still available above.
+                """)
         
 
     

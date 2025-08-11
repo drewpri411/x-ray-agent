@@ -125,7 +125,7 @@ Create a `.env` file based on `env.example`:
 GOOGLE_API_KEY=your_google_ai_api_key_here
 
 # Optional
-GEMINI_MODEL=gemini-1.5-flash
+GEMINI_MODEL=gemini-2.5-pro
 LOG_LEVEL=INFO
 TORCHXRAYVISION_MODEL=densenet121-res224-all
 GENERATE_HEATMAPS=true
