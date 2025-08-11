@@ -90,7 +90,7 @@ Examples:
         
         # Run analysis
         logger.info("Starting radiology analysis...")
-        results = runner.run_analysis(args.image, args.symptoms)
+        results = runner.run_analysis(args.image, args.symptoms, generate_heatmaps=False)
         
         # Display results
         display_results(results)
