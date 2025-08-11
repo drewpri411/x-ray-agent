@@ -52,11 +52,32 @@ class ChestXRayClassifier:
             Preprocessed image tensor
         """
         try:
-            # Load image using TorchXRayVision's preprocessing
-            img = xrv.datasets.normalize(image_path, 224)
-            img = img.unsqueeze(0)  # Add batch dimension
-            img = img.to(self.device)
-            return img
+            # Load image with PIL first
+            from PIL import Image
+            import numpy as np
+            
+            # Load image
+            img = Image.open(image_path).convert('L')  # Convert to grayscale
+            img = img.resize((224, 224))
+            img_array = np.array(img)
+            
+            # Use TorchXRayVision's normalize function
+            import torchxrayvision as xrv
+            img_normalized = xrv.datasets.normalize(img_array, 255)
+            
+            # Convert to tensor
+            img_tensor = torch.from_numpy(img_normalized).float()
+            
+            # Add channel and batch dimensions if needed
+            if img_tensor.dim() == 2:  # [H, W]
+                img_tensor = img_tensor.unsqueeze(0)  # [1, H, W]
+            if img_tensor.dim() == 3:  # [C, H, W]
+                img_tensor = img_tensor.unsqueeze(0)  # [1, C, H, W]
+            
+            # Move to device
+            img_tensor = img_tensor.to(self.device)
+            
+            return img_tensor
         except Exception as e:
             logger.error(f"Failed to preprocess image {image_path}: {e}")
             raise
@@ -78,7 +99,14 @@ class ChestXRayClassifier:
             # Perform inference
             with torch.no_grad():
                 outputs = self.model(img_tensor)
-                probabilities = torch.sigmoid(outputs[0]).cpu().numpy()
+                # Handle different output formats
+                if isinstance(outputs, tuple):
+                    outputs = outputs[0]
+                elif isinstance(outputs, dict):
+                    outputs = outputs['logits']
+                
+                # Apply sigmoid and get the first (and only) batch
+                probabilities = torch.sigmoid(outputs).cpu().numpy()[0]
             
             # Create results dictionary
             results = dict(zip(self.pathologies, probabilities))

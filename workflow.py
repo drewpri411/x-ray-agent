@@ -83,8 +83,11 @@ def create_radiology_workflow() -> StateGraph:
             if not validation['is_valid']:
                 raise ValueError(f"Image validation failed: {validation['errors']}")
             
+            # Get heatmap preference from state
+            generate_heatmaps = state.get('generate_heatmaps', False)
+            
             # Perform analysis
-            image_analysis = image_agent.analyze_image(image_path, generate_heatmaps=True)
+            image_analysis = image_agent.analyze_image(image_path, generate_heatmaps=generate_heatmaps)
             state['image_analysis'] = image_analysis
             
             if image_analysis.get('analysis_status') == 'failed':
@@ -215,7 +218,8 @@ class RadiologyWorkflowRunner:
     
     def run_analysis(self, 
                     image_path: str, 
-                    symptoms: str = "") -> Dict[str, Any]:
+                    symptoms: str = "",
+                    generate_heatmaps: bool = False) -> Dict[str, Any]:
         """
         Run the complete radiology analysis workflow.
         
@@ -239,6 +243,9 @@ class RadiologyWorkflowRunner:
                 warnings=[],
                 workflow_status='running'
             )
+            
+            # Store heatmap preference in state
+            initial_state['generate_heatmaps'] = generate_heatmaps
             
             logger.info(f"Starting radiology analysis for: {image_path}")
             

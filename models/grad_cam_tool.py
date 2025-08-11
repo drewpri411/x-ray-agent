@@ -5,6 +5,8 @@ Generates heatmaps to visualize model attention on chest X-ray images.
 
 import torch
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')  # Use non-interactive backend
 import matplotlib.pyplot as plt
 import cv2
 from PIL import Image
@@ -12,9 +14,8 @@ from typing import Dict, Any, List, Optional
 import logging
 
 try:
-    from pytorch_grad_cam import GradCAM
-    from pytorch_grad_cam.utils.model_targets import ClassifierOutputTarget
-    from pytorch_grad_cam.utils.image import show_cam_on_image
+    from gradcam import GradCAM
+    from gradcam.utils import visualize_cam
     GRADCAM_AVAILABLE = True
 except ImportError as e:
     logging.warning(f"PyTorch Grad-CAM not available: {e}")
@@ -43,12 +44,22 @@ class XRayGradCAM:
         if target_layers is None:
             # For DenseNet, typically the last convolutional layer
             if hasattr(model, 'features') and hasattr(model.features, 'denseblock4'):
-                self.target_layers = [model.features.denseblock4]
+                # Get the last layer of denseblock4
+                denseblock4 = model.features.denseblock4
+                if hasattr(denseblock4, 'denselayer32'):
+                    self.target_layers = [denseblock4.denselayer32]
+                else:
+                    # Get the last dense layer in denseblock4
+                    last_layer_name = f'denselayer{len(denseblock4)}'
+                    if hasattr(denseblock4, last_layer_name):
+                        self.target_layers = [getattr(denseblock4, last_layer_name)]
+                    else:
+                        self.target_layers = [denseblock4]
             else:
                 # Fallback: find the last convolutional layer
                 self.target_layers = self._find_last_conv_layer(model)
         
-        self.cam = GradCAM(model=self.model, target_layers=self.target_layers, use_cuda=torch.cuda.is_available())
+        self.cam = GradCAM(arch=self.model, target_layer=self.target_layers[0])
         logger.info("Grad-CAM initialized successfully")
     
     def _find_last_conv_layer(self, model):
@@ -80,18 +91,31 @@ class XRayGradCAM:
             # Load and preprocess image
             input_tensor = self._prepare_input(image_path)
             
-            # Create target
-            targets = [ClassifierOutputTarget(target_class)]
+            # Generate heatmap using the gradcam package
+            grayscale_cam = self.cam(input_tensor, class_idx=target_class)
+            # Handle different output formats
+            if isinstance(grayscale_cam, tuple):
+                grayscale_cam = grayscale_cam[0]
             
-            # Generate heatmap
-            grayscale_cam = self.cam(input_tensor=input_tensor, targets=targets)
-            grayscale_cam = grayscale_cam[0, :]
+            # Convert to numpy if it's a tensor
+            if hasattr(grayscale_cam, 'cpu'):
+                grayscale_cam = grayscale_cam.cpu().numpy()
+            
+            # Get the first batch if needed
+            if grayscale_cam.ndim > 2:
+                grayscale_cam = grayscale_cam[0]
             
             # Load original image for overlay
             original_image = self._load_image_for_overlay(image_path)
             
-            # Create heatmap overlay
-            heatmap_image = show_cam_on_image(original_image, grayscale_cam, use_rgb=True)
+            # Convert to tensors for visualize_cam
+            import torch
+            grayscale_cam_tensor = torch.from_numpy(grayscale_cam).unsqueeze(0).unsqueeze(0)  # [1, 1, H, W]
+            original_image_tensor = torch.from_numpy(original_image).permute(2, 0, 1).unsqueeze(0)  # [1, 3, H, W]
+            
+            # Create heatmap overlay using visualize_cam
+            heatmap, heatmap_image = visualize_cam(grayscale_cam_tensor, original_image_tensor, alpha=0.4)
+            heatmap_image = heatmap_image.permute(1, 2, 0).numpy()  # Convert back to numpy
             
             # Create visualization
             fig, axes = plt.subplots(1, 3, figsize=(15, 5))
@@ -102,7 +126,11 @@ class XRayGradCAM:
             axes[0].axis('off')
             
             # Heatmap
-            axes[1].imshow(grayscale_cam, cmap='jet')
+            if grayscale_cam.ndim == 3 and grayscale_cam.shape[0] == 1:
+                grayscale_cam_2d = grayscale_cam[0]
+            else:
+                grayscale_cam_2d = grayscale_cam
+            axes[1].imshow(grayscale_cam_2d, cmap='jet')
             axes[1].set_title('Grad-CAM Heatmap')
             axes[1].axis('off')
             
@@ -165,57 +193,75 @@ class XRayGradCAM:
     
     def _get_pathology_class_index(self, pathology_name: str) -> int:
         """
-        Map pathology name to class index.
-        This is a simplified mapping - in practice, you'd need the exact class mapping
-        from your TorchXRayVision model.
+        Map pathology name to class index using the model's pathology list.
         """
-        # Common pathology mappings (this should match your model's class mapping)
-        pathology_mapping = {
-            'pneumonia': 0,
-            'pleural_effusion': 1,
-            'atelectasis': 2,
-            'cardiomegaly': 3,
-            'consolidation': 4,
-            'edema': 5,
-            'fracture': 6,
-            'mass': 7,
-            'nodule': 8,
-            'pneumothorax': 9
-        }
+        if not hasattr(self.model, 'pathologies'):
+            logger.warning("Model doesn't have pathologies attribute")
+            return 0
+        
+        # Get the model's pathology list
+        model_pathologies = self.model.pathologies
         
         # Try exact match first
-        if pathology_name in pathology_mapping:
-            return pathology_mapping[pathology_name]
+        if pathology_name in model_pathologies:
+            return model_pathologies.index(pathology_name)
+        
+        # Try case-insensitive match
+        for i, path in enumerate(model_pathologies):
+            if path.lower() == pathology_name.lower():
+                return i
         
         # Try partial matches
-        for key, value in pathology_mapping.items():
-            if key in pathology_name.lower() or pathology_name.lower() in key:
-                return value
+        for i, path in enumerate(model_pathologies):
+            if (pathology_name.lower() in path.lower() or 
+                path.lower() in pathology_name.lower()):
+                return i
         
         # Default to first class if no match found
         logger.warning(f"No class mapping found for pathology: {pathology_name}")
+        logger.info(f"Available pathologies: {model_pathologies[:10]}...")  # Show first 10
         return 0
     
     def _prepare_input(self, image_path: str) -> torch.Tensor:
-        """Prepare input tensor for the model."""
-        # Load image
-        image = Image.open(image_path).convert('RGB')
-        
-        # Resize to model input size (typically 224x224 for DenseNet)
-        image = image.resize((224, 224))
-        
-        # Convert to tensor and normalize
-        image_tensor = torch.from_numpy(np.array(image)).float()
-        image_tensor = image_tensor.permute(2, 0, 1)  # HWC to CHW
-        image_tensor = image_tensor / 255.0  # Normalize to [0, 1]
-        
-        # Add batch dimension
-        image_tensor = image_tensor.unsqueeze(0)
-        
-        return image_tensor
+        """Prepare input tensor for the model using TorchXRayVision preprocessing."""
+        try:
+            # Load image with PIL first
+            from PIL import Image
+            import numpy as np
+            
+            # Load image
+            img = Image.open(image_path).convert('L')  # Convert to grayscale
+            img = img.resize((224, 224))
+            img_array = np.array(img)
+            
+            # Use TorchXRayVision's normalize function
+            import torchxrayvision as xrv
+            img_normalized = xrv.datasets.normalize(img_array, 255)
+            
+            # Convert to tensor
+            img_tensor = torch.from_numpy(img_normalized).float()
+            
+            # Add channel and batch dimensions if needed
+            if img_tensor.dim() == 2:  # [H, W]
+                img_tensor = img_tensor.unsqueeze(0)  # [1, H, W]
+            if img_tensor.dim() == 3:  # [C, H, W]
+                img_tensor = img_tensor.unsqueeze(0)  # [1, C, H, W]
+            
+            return img_tensor
+            
+        except Exception as e:
+            logger.error(f"Failed to preprocess image for Grad-CAM: {e}")
+            # Fallback to basic preprocessing
+            image = Image.open(image_path).convert('RGB')
+            image = image.resize((224, 224))
+            image_tensor = torch.from_numpy(np.array(image)).float()
+            image_tensor = image_tensor.permute(2, 0, 1)  # HWC to CHW
+            image_tensor = image_tensor / 255.0  # Normalize to [0, 1]
+            image_tensor = image_tensor.unsqueeze(0)
+            return image_tensor
     
     def _load_image_for_overlay(self, image_path: str) -> np.ndarray:
         """Load image for heatmap overlay."""
-        image = Image.open(image_path).convert('RGB')
+        image = Image.open(image_path).convert('RGB')  # Convert to RGB for overlay
         image = image.resize((224, 224))
         return np.array(image) / 255.0 

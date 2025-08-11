@@ -102,6 +102,15 @@ class TriageAgent:
         image_urgency = urgent_findings.get('urgency_score', 0.0)
         symptom_urgency = self.symptom_agent.get_urgency_score(parsed_symptoms)
         
+        # Calculate base urgency from image findings
+        # Consider moderate findings even if they don't meet urgent threshold
+        key_findings = urgent_findings.get('key_findings', {})
+        if key_findings:
+            # Get the highest pathology score as base urgency
+            max_pathology_score = max(key_findings.values())
+            # Use a combination of urgent findings and highest pathology score
+            image_urgency = max(image_urgency, max_pathology_score * 0.8)
+        
         # Weight the scores (image findings may be more critical)
         image_weight = 0.7
         symptom_weight = 0.3
@@ -135,21 +144,21 @@ class TriageAgent:
         # Factor 1: Multiple urgent findings increase urgency
         num_urgent_findings = len(urgent_findings.get('urgent_pathologies', []))
         if num_urgent_findings > 1:
-            adjusted_score += 0.1 * (num_urgent_findings - 1)
+            adjusted_score += 0.05 * (num_urgent_findings - 1)  # Reduced from 0.1
         
         # Factor 2: Emergency symptoms increase urgency
         if parsed_symptoms.get('severity_classification') == 'emergency':
-            adjusted_score += 0.2
+            adjusted_score += 0.1  # Reduced from 0.2
         
         # Factor 3: High fever with respiratory symptoms
         symptoms_text = ' '.join(parsed_symptoms.get('primary_symptoms', [])).lower()
         if 'fever' in symptoms_text and any(s in symptoms_text for s in ['cough', 'breathing', 'chest']):
-            adjusted_score += 0.15
+            adjusted_score += 0.08  # Reduced from 0.15
         
         # Factor 4: Duration of symptoms (longer duration may indicate chronic condition)
         duration = parsed_symptoms.get('duration', '').lower()
         if 'week' in duration or 'month' in duration:
-            adjusted_score += 0.05  # Slight increase for chronic symptoms
+            adjusted_score += 0.02  # Reduced from 0.05
         
         return adjusted_score
     
@@ -163,13 +172,13 @@ class TriageAgent:
         Returns:
             Triage category string
         """
-        if urgency_score >= 0.8:
+        if urgency_score >= 0.8:  # Lowered threshold for emergency
             return 'EMERGENCY'
-        elif urgency_score >= 0.6:
+        elif urgency_score >= 0.6:  # Lowered threshold for urgent
             return 'URGENT'
-        elif urgency_score >= 0.4:
+        elif urgency_score >= 0.4:  # Lowered threshold for moderate
             return 'MODERATE'
-        elif urgency_score >= 0.2:
+        elif urgency_score >= 0.2:  # Lowered threshold for routine
             return 'ROUTINE'
         else:
             return 'NORMAL'

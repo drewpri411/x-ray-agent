@@ -22,7 +22,17 @@ class ImageAnalysisAgent:
             model_name: Name of the TorchXRayVision model to use
         """
         self.classifier = ChestXRayClassifier(model_name)
-        self.grad_cam = XRayGradCAM(self.classifier.model)
+        
+        # Initialize Grad-CAM if available
+        try:
+            self.grad_cam = XRayGradCAM(self.classifier.model)
+            self.grad_cam_available = True
+            logger.info("Image analysis agent initialized with Grad-CAM support")
+        except Exception as e:
+            self.grad_cam = None
+            self.grad_cam_available = False
+            logger.warning(f"Grad-CAM not available: {e}. Continuing without heatmap generation.")
+        
         logger.info("Image analysis agent initialized successfully")
     
     def analyze_image(self, image_path: str, generate_heatmaps: bool = True) -> Dict[str, Any]:
@@ -91,7 +101,8 @@ class ImageAnalysisAgent:
             'has_urgent_findings': False,
             'urgent_pathologies': [],
             'urgency_score': 0.0,
-            'recommendations': []
+            'recommendations': [],
+            'key_findings': {}  # Add key_findings to the structure
         }
         
         try:
@@ -100,11 +111,11 @@ class ImageAnalysisAgent:
             
             # Define urgent pathologies and their thresholds
             urgent_pathologies = {
-                'Pneumonia': 0.6,
-                'Effusion': 0.7,
-                'Lung Opacity': 0.8,
-                'Cardiomegaly': 0.8,
-                'Edema': 0.7
+                'Pneumonia': 0.6,  # Lowered threshold
+                'Effusion': 0.6,   # Lowered threshold
+                'Lung Opacity': 0.6,  # Lowered threshold
+                'Cardiomegaly': 0.6,  # Lowered threshold
+                'Edema': 0.6        # Lowered threshold
             }
             
             # Check for urgent findings
@@ -118,6 +129,9 @@ class ImageAnalysisAgent:
                             'threshold': threshold
                         })
             
+            # Store key_findings for triage assessment
+            urgent_findings['key_findings'] = key_findings
+            
             # Determine overall urgency
             if urgent_findings['urgent_pathologies']:
                 urgent_findings['has_urgent_findings'] = True
@@ -129,6 +143,12 @@ class ImageAnalysisAgent:
                 urgent_findings['recommendations'] = self._generate_urgent_recommendations(
                     urgent_findings['urgent_pathologies']
                 )
+            else:
+                # Even if no urgent pathologies, consider moderate findings
+                if key_findings:
+                    max_score = max(key_findings.values())
+                    if max_score >= 0.5:  # Moderate threshold
+                        urgent_findings['urgency_score'] = max_score * 0.7  # Scale down for moderate findings
             
             return urgent_findings
             
@@ -220,6 +240,11 @@ class ImageAnalysisAgent:
         Returns:
             Dictionary containing heatmap data
         """
+        # Check if Grad-CAM is available
+        if not self.grad_cam_available or self.grad_cam is None:
+            logger.info("Grad-CAM not available - skipping heatmap generation")
+            return {}
+        
         try:
             # Generate heatmaps for top 3 pathologies with scores > 0.1
             heatmaps = self.grad_cam.generate_multi_pathology_heatmaps(
