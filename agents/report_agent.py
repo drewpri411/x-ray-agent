@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 class ReportAgent:
     """Agent for generating comprehensive medical reports."""
     
-    def __init__(self, llm_model: str = "gemini-1.5-flash"):
+    def __init__(self, llm_model: str = "gemini-2.5-pro"):
         """
         Initialize the report agent.
         
