@@ -9,6 +9,7 @@ import os
 import sys
 from typing import Dict, Any
 from workflow import RadiologyWorkflowRunner
+from workflow_react import ReActDiagnosticWorkflowRunner
 from utils.helpers import setup_logging, load_environment_variables
 import json
 
@@ -62,6 +63,12 @@ Examples:
         help="TorchXRayVision model to use"
     )
     
+    parser.add_argument(
+        "--react",
+        action="store_true",
+        help="Use ReAct-style diagnostic reasoning workflow"
+    )
+    
     args = parser.parse_args()
     
     # Set logging level
@@ -69,28 +76,38 @@ Examples:
         logging.getLogger().setLevel(logging.DEBUG)
     
     try:
-        # Initialize workflow runner
-        logger.info("Initializing Radiology Assistant...")
-        runner = RadiologyWorkflowRunner()
-        
-        # Validate inputs
-        logger.info("Validating inputs...")
-        validation = runner.validate_inputs(args.image, args.symptoms)
-        
-        if not validation['is_valid']:
-            logger.error("Input validation failed:")
-            for error in validation['errors']:
-                logger.error(f"  - {error}")
-            sys.exit(1)
-        
-        if validation['warnings']:
-            logger.warning("Input validation warnings:")
-            for warning in validation['warnings']:
-                logger.warning(f"  - {warning}")
-        
-        # Run analysis
-        logger.info("Starting radiology analysis...")
-        results = runner.run_analysis(args.image, args.symptoms, generate_heatmaps=False)
+        # Choose workflow type
+        if args.react:
+            logger.info("Initializing ReAct Diagnostic Reasoning Workflow...")
+            runner = ReActDiagnosticWorkflowRunner()
+            workflow_info = runner.get_workflow_info()
+            logger.info(f"Using workflow: {workflow_info['workflow_type']}")
+            
+            # Run ReAct analysis
+            logger.info("Starting ReAct diagnostic analysis...")
+            results = runner.run_diagnostic_analysis(args.image, args.symptoms, generate_heatmaps=False)
+        else:
+            logger.info("Initializing Legacy Radiology Workflow...")
+            runner = RadiologyWorkflowRunner()
+            
+            # Validate inputs (legacy workflow only)
+            logger.info("Validating inputs...")
+            validation = runner.validate_inputs(args.image, args.symptoms)
+            
+            if not validation['is_valid']:
+                logger.error("Input validation failed:")
+                for error in validation['errors']:
+                    logger.error(f"  - {error}")
+                sys.exit(1)
+            
+            if validation['warnings']:
+                logger.warning("Input validation warnings:")
+                for warning in validation['warnings']:
+                    logger.warning(f"  - {warning}")
+            
+            # Run legacy analysis
+            logger.info("Starting legacy radiology analysis...")
+            results = runner.run_analysis(args.image, args.symptoms, generate_heatmaps=False)
         
         # Display results
         display_results(results)
@@ -156,6 +173,38 @@ def display_results(results: Dict[str, Any]):
         if executive_summary:
             print(f"\n📋 EXECUTIVE SUMMARY:")
             print(f"   {executive_summary}")
+        
+        # ReAct-specific information
+        react_workflow = results.get('react_workflow', {})
+        if react_workflow:
+            print(f"\n🧠 REACT DIAGNOSTIC REASONING:")
+            print(f"   Iterations: {react_workflow.get('iteration_count', 0)}")
+            print(f"   Tools Used: {len(react_workflow.get('tools_used', []))}")
+            
+            # Show hypotheses
+            hypotheses = react_workflow.get('hypotheses', [])
+            if hypotheses:
+                print(f"   Diagnostic Hypotheses:")
+                for i, hyp in enumerate(hypotheses[:3]):  # Top 3
+                    print(f"     {i+1}. {hyp['diagnosis']} (confidence: {hyp['confidence']:.2f})")
+            
+            # Show similar cases
+            similar_cases = react_workflow.get('similar_cases', [])
+            if similar_cases:
+                print(f"   Similar Cases Found: {len(similar_cases)}")
+        
+        # Diagnostic insights
+        diagnostic_insights = results.get('diagnostic_insights', {})
+        if diagnostic_insights:
+            primary_diagnosis = diagnostic_insights.get('primary_diagnosis')
+            if primary_diagnosis:
+                print(f"\n🎯 PRIMARY DIAGNOSIS: {primary_diagnosis}")
+            
+            differential_diagnoses = diagnostic_insights.get('differential_diagnoses', [])
+            if differential_diagnoses:
+                print(f"\n🔍 DIFFERENTIAL DIAGNOSES:")
+                for i, diff in enumerate(differential_diagnoses[:3]):  # Top 3
+                    print(f"   {i+1}. {diff['diagnosis']} (confidence: {diff['confidence']:.2f})")
     
     elif status == 'error':
         # Error information
