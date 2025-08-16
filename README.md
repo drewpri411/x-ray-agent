@@ -1,316 +1,272 @@
-# AI Radiology Assistant
+# 🤖 Agentic AI Radiology Assistant
 
-An intelligent AI system for chest X-ray analysis, built with TorchXRayVision, LangChain, and LangGraph. This prototype demonstrates automated detection of pulmonary pathologies (pneumonia, pleural effusion, lung opacities) with explainable AI and automated triage capabilities.
+An intelligent AI system for chest X-ray analysis, built with **TorchXRayVision**, **LangChain**, and **LangGraph**. This prototype demonstrates **agentic AI** with **ReAct-style reasoning** for automated detection of pulmonary pathologies with explainable AI and automated triage capabilities.
 
-## 🚨 Important Disclaimer
+## 🧠 Agentic Architecture Overview
 
-**This is a prototype AI system for educational and demonstration purposes only.**
-- All findings should be reviewed by qualified healthcare professionals before clinical use
-- This system is NOT intended for actual medical diagnosis or treatment decisions
-- For research and educational use only
+This system implements a **sophisticated agentic AI** that can reason, act, learn, and adapt using the **ReAct pattern** (Reasoning + Acting) orchestrated by **LangGraph**.
 
-## 🏗️ Architecture Overview
+### Core Agentic Capabilities:
+- **🔍 Autonomous Reasoning**: Multi-step diagnostic reasoning with hypothesis generation and refinement
+- **🛠️ Tool Usage**: Dynamic selection and execution of medical diagnostic tools
+- **🧠 Memory Integration**: Clinical memory system for learning from past cases
+- **🔄 Iterative Refinement**: Continuous improvement through reasoning loops
+- **📊 Explainable AI**: Transparent decision-making with evidence tracking
 
-The system uses an agentic architecture with LangGraph orchestration:
+## 🏗️ ReAct + LangGraph Architecture
 
 ```
-User Input (Image + Symptoms) 
-    ↓
-LangGraph Workflow
-    ↓
-┌─────────────────┬─────────────────┬─────────────────┬─────────────────┐
-│ Symptom Agent   │ Image Agent     │ Triage Agent    │ Report Agent    │
-│ (LLM parsing)   │ (TorchXRayVision│ (Urgency assess)│ (LLM generation)│
-│                 │ + Grad-CAM)     │                 │                 │
-└─────────────────┴─────────────────┴─────────────────┴─────────────────┘
-    ↓
-Comprehensive Medical Report + Triage Recommendations
+┌─────────────────────────────────────────────────────────────┐
+│                    LANGGRAPH ORCHESTRATION                  │
+├─────────────────────────────────────────────────────────────┤
+│  START                                                      │
+│    ↓                                                        │
+│  OBSERVE ──┐                                                │
+│    ↓       │                                                │
+│  RETRIEVE  │                                                │
+│  MEMORY    │                                                │
+│    ↓       │                                                │
+│  THINK ────┼──► SELECT_TOOLS ──► EXECUTE_TOOLS ──► REFLECT │
+│    ↓       │                                                │
+│  UPDATE    │                                                │
+│  MEMORY    │                                                │
+│    ↓       │                                                │
+│  OBSERVE ◄─┘                                                │
+│    ↓                                                        │
+│  CONCLUDE                                                   │
+│    ↓                                                        │
+│  END                                                        │
+└─────────────────────────────────────────────────────────────┘
 ```
+
+### ReAct Pattern Implementation:
+
+#### 1. **OBSERVE** - Data Collection & Analysis
+- X-ray image analysis with TorchXRayVision (DenseNet-121)
+- Pathology detection: Pneumonia, Pleural Effusion, Lung Opacities, Cardiomegaly, Edema, Consolidation
+- Grad-CAM heatmap generation for explainability
+- Patient symptom parsing and categorization
+
+#### 2. **THINK** - Hypothesis Generation
+- Generate initial diagnostic hypotheses with confidence scores
+- Consider multiple differential diagnoses
+- Example: "Cardiogenic Pulmonary Edema (confidence: 0.85)"
+
+#### 3. **ACT** - Tool Usage & External Interactions
+- **Dynamic Tool Selection**: Choose relevant diagnostic tools based on findings
+- **Tool Execution**:
+  - `differential_diagnosis_tool` - Medical knowledge lookup
+  - `severity_assessment_tool` - Clinical risk evaluation
+  - `clinical_guidelines_tool` - Best practice guidelines
+  - `medical_knowledge_lookup_tool` - Literature search
+  - `clinical_decision_rules_tool` - Decision support
+
+#### 4. **REFLECT** - Evidence Evaluation
+- Evaluate tool outputs against hypotheses
+- Refine confidence scores based on evidence
+- Update diagnostic reasoning
+- Identify knowledge gaps
+
+#### 5. **LOOP** - Iterative Refinement
+- Return to OBSERVE with updated context
+- Re-analyze with new insights
+- Continue until confidence threshold reached (max 3 iterations)
+
+#### 6. **CONCLUDE** - Final Diagnosis
+- Present primary diagnosis with confidence
+- List differential diagnoses
+- Provide clinical recommendations
+- Update clinical memory for future cases
+
+## 🛠️ Technical Stack
+
+### Core AI/ML:
+- **TorchXRayVision**: Pre-trained DenseNet-121 for chest X-ray analysis
+- **PyTorch**: Deep learning framework
+- **Grad-CAM**: Explainable AI for heatmap generation
+
+### Agentic Framework:
+- **LangGraph**: Workflow orchestration with state management
+- **LangChain**: Tool integration and LLM interactions
+- **Google Gemini 2.5 Pro**: Large language model for reasoning
+
+### Memory & Learning:
+- **Clinical Memory System**: TF-IDF based case similarity
+- **Pattern Recognition**: Learning from historical cases
+- **Continuous Improvement**: Adaptive reasoning based on outcomes
+
+### User Interface:
+- **Streamlit**: Interactive web interface with real-time workflow visualization
+- **Live Stage Tracking**: Real-time display of ReAct reasoning process
+- **Grad-CAM Visualization**: Interactive heatmap display
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-
-- Python 3.8+
-- Google AI API key (for LLM features)
-- GPU recommended (for faster inference)
+- Python 3.11+
+- Google AI API key (Gemini 2.5 Pro)
 
 ### Installation
-
-1. **Clone the repository:**
-   ```bash
-   git clone <repository-url>
-   cd x-ray-agent
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Set up environment:**
-   ```bash
-   cp env.example .env
-   # Edit .env and add your Google AI API key
-   ```
-
-4. **Add sample X-ray images:**
-   ```bash
-   # Place chest X-ray images in the data/ directory
-   # See data/README.md for guidelines
-   ```
-
-### Usage
-
-#### Command Line Interface
-
 ```bash
-# Basic analysis
-python main.py --image data/sample_xray.jpg --symptoms "Patient has cough and fever for 3 days"
-
-# Save results to file
-python main.py --image data/sample_xray.jpg --output results.json
-
-# Verbose logging
-python main.py --image data/sample_xray.jpg --verbose
+git clone <repository>
+cd x-ray-agent
+pip install -r requirements.txt
 ```
 
-#### Web Interface
-
+### Environment Setup
 ```bash
-# Launch Streamlit web app
+cp env.example .env
+# Add your GEMINI_API_KEY to .env
+```
+
+### Run the Application
+```bash
+# Web Interface
 streamlit run ui/app_streamlit.py
+
+# Command Line
+python main.py --react path/to/xray.jpg "Patient has cough and fever"
 ```
 
-#### Docker
+## 📊 Agentic Workflow Example
 
-```bash
-# Build and run with Docker
-docker build -t radiology-assistant .
-docker run -p 8501:8501 radiology-assistant
-```
+### Input:
+- **X-ray Image**: Chest X-ray showing pulmonary findings
+- **Symptoms**: "Patient has cough and fever for 3 days"
+
+### ReAct Execution:
+
+#### **Iteration 1:**
+1. **OBSERVE**: "Pneumonia: 0.56, Cardiomegaly: 0.66, Edema: 0.57"
+2. **THINK**: "Possible CHF with pulmonary edema"
+3. **ACT**: Use differential diagnosis tool
+4. **REFLECT**: "CHF confirmed, but need to rule out pneumonia"
+
+#### **Iteration 2:**
+1. **OBSERVE**: Re-analyze with CHF context
+2. **THINK**: "Primary: CHF, Secondary: Pneumonia"
+3. **ACT**: Use severity assessment tool
+4. **REFLECT**: "Moderate severity, requires prompt evaluation"
+
+#### **CONCLUDE:**
+- **Primary Diagnosis**: "Congestive Heart Failure with Pulmonary Edema"
+- **Confidence**: 0.85
+- **Recommendations**: "Echocardiography, cardiac biomarkers"
+
+## 🧠 Key Agentic Features
+
+### **1. Autonomous Decision Making**
+- Agent decides which tools to use based on findings
+- Determines when to continue vs. conclude reasoning
+- Adapts reasoning strategy based on evidence
+
+### **2. Sophisticated Tool Usage**
+- Dynamic tool selection from medical knowledge base
+- Structured tool execution with error handling
+- Result integration into reasoning process
+
+### **3. Clinical Memory Integration**
+- TF-IDF based similarity search for past cases
+- Pattern recognition across case history
+- Continuous learning and improvement
+
+### **4. Iterative Reasoning**
+- Multi-cycle reasoning with evidence accumulation
+- Confidence-based stopping criteria
+- Hypothesis refinement through tool usage
+
+### **5. Explainable AI**
+- Transparent decision process with evidence tracking
+- Grad-CAM heatmaps for visual explainability
+- Confidence scoring for all diagnoses
 
 ## 📁 Project Structure
 
 ```
 x-ray-agent/
-├── agents/                 # LangGraph agent nodes
-│   ├── symptom_agent.py   # Symptom parsing with LLM
-│   ├── image_agent.py     # X-ray analysis with TorchXRayVision
-│   ├── triage_agent.py    # Automated triage assessment
-│   └── report_agent.py    # Medical report generation
-├── models/                # ML model wrappers
-│   ├── image_model.py     # TorchXRayVision classifier
-│   └── grad_cam_tool.py   # Explainability with Grad-CAM
-├── ui/                    # User interfaces
-│   └── app_streamlit.py   # Streamlit web interface
-├── utils/                 # Helper utilities
-│   └── helpers.py         # Common utility functions
-├── data/                  # Sample images and data
-├── workflow.py            # LangGraph workflow orchestration
-├── main.py               # Command-line entry point
-├── requirements.txt      # Python dependencies
-├── Dockerfile           # Container configuration
-└── README.md            # This file
+├── agents/                     # Agentic AI components
+│   ├── diagnostic_state.py    # ReAct state management
+│   ├── react_nodes.py         # ReAct pattern nodes
+│   ├── diagnostic_tools.py    # Medical diagnostic tools
+│   ├── memory_system.py       # Clinical memory system
+│   └── ...
+├── workflow_react.py          # LangGraph ReAct workflow
+├── workflow.py                # Legacy linear workflow
+├── models/                    # ML models
+│   ├── image_model.py         # TorchXRayVision wrapper
+│   └── grad_cam_tool.py       # Grad-CAM implementation
+├── ui/                        # User interface
+│   └── app_streamlit.py       # Streamlit with live workflow
+└── data/                      # Sample data and memory
 ```
 
-## 🔧 Configuration
+## 🔬 Advanced Features
 
-### Environment Variables
+### **ReAct Reasoning Engine**
+- Multi-iteration diagnostic reasoning
+- Tool-based hypothesis validation
+- Evidence-driven confidence scoring
 
-Create a `.env` file based on `env.example`:
+### **Clinical Memory System**
+- Case similarity using TF-IDF vectors
+- Pattern recognition across diagnoses
+- Learning from clinical outcomes
 
-```bash
-# Required
-GOOGLE_API_KEY=your_google_ai_api_key_here
+### **Real-time Workflow Visualization**
+- Live stage-by-stage ReAct process display
+- Current stage highlighting
+- Completed stages history
 
-# Optional
-GEMINI_MODEL=gemini-2.5-pro
-LOG_LEVEL=INFO
-TORCHXRAYVISION_MODEL=densenet121-res224-all
-GENERATE_HEATMAPS=true
-```
+### **Medical Tool Integration**
+- Differential diagnosis tools
+- Severity assessment algorithms
+- Clinical guideline lookup
+- Medical knowledge base queries
 
-### Model Options
+## 🎯 Use Cases
 
-Available TorchXRayVision models:
-- `densenet121-res224-all` (default) - Trained on multiple datasets
-- `densenet121-res224-chex` - CheXpert dataset
-- `densenet121-res224-mimic_ch` - MIMIC-CXR dataset
+### **Clinical Decision Support**
+- Automated chest X-ray interpretation
+- Differential diagnosis generation
+- Severity assessment and triage
+- Clinical guideline recommendations
 
-## 🧠 Features
+### **Medical Education**
+- Explainable AI for teaching
+- Case-based learning
+- Pattern recognition training
 
-### 1. Automated Pathology Detection
-- **Pneumonia** detection with confidence scoring
-- **Pleural effusion** identification
-- **Lung opacity** analysis
-- **Cardiomegaly** detection
-- **Pulmonary edema** assessment
+### **Research & Development**
+- Agentic AI for medical applications
+- ReAct pattern implementation
+- LangGraph workflow orchestration
 
-### 2. Explainable AI
-- **Grad-CAM heatmaps** showing regions of interest
-- **Confidence scores** for each pathology
-- **Visual explanations** for model decisions
+## ⚠️ Important Notes
 
-### 3. Intelligent Triage
-- **Automated urgency assessment** based on image findings and symptoms
-- **Risk stratification** (Emergency, Urgent, Moderate, Routine, Normal)
-- **Clinical recommendations** for next steps
+### **Regulatory Compliance**
+- **SaMD Classification**: Software as a Medical Device
+- **HIPAA Considerations**: Patient data privacy
+- **ACR Guidelines**: American College of Radiology standards
+- **Clinical Validation**: Requires clinical validation for real use
 
-### 4. Natural Language Processing
-- **Symptom parsing** using LLM
-- **Medical report generation** with structured findings
-- **Clinical language** output suitable for healthcare providers
-
-### 5. Agentic Workflow
-- **LangGraph orchestration** for complex multi-step analysis
-- **Error handling** and graceful degradation
-- **Modular design** for easy extension
-
-## 📊 Output Format
-
-The system generates comprehensive results including:
-
-```json
-{
-  "workflow_status": "completed",
-  "image_analysis": {
-    "key_findings": {
-      "Pneumonia": 0.75,
-      "Effusion": 0.32
-    },
-    "heatmaps": {...}
-  },
-  "triage_result": {
-    "triage_category": "URGENT",
-    "urgency_score": 0.68,
-    "recommendations": [...]
-  },
-  "report": {
-    "executive_summary": "...",
-    "full_report": "..."
-  }
-}
-```
-
-## 🔬 Technical Details
-
-### AI Models Used
-
-1. **TorchXRayVision DenseNet-121**
-   - Pre-trained on NIH ChestX-ray14, CheXpert, MIMIC-CXR
-   - 224x224 image input
-   - Multi-label classification for 18+ pathologies
-
-2. **Google Gemini 1.5 Flash**
-   - Symptom parsing and medical report generation
-   - Structured output for clinical use
-
-3. **Grad-CAM**
-   - Explainability for CNN decisions
-   - Heatmap generation for transparency
-
-### Performance Considerations
-
-- **GPU acceleration** recommended for real-time analysis
-- **Model loading** takes ~30 seconds on first run
-- **Inference time** ~2-5 seconds per image (GPU)
-- **Memory usage** ~4GB RAM recommended
-
-## 🛠️ Development
-
-### Adding New Agents
-
-1. Create agent class in `agents/` directory
-2. Implement required interface methods
-3. Add to workflow in `workflow.py`
-4. Update state structure if needed
-
-### Extending Pathology Detection
-
-1. Modify `models/image_model.py` for new pathologies
-2. Update triage logic in `agents/triage_agent.py`
-3. Add new prompts in `agents/report_agent.py`
-
-### Custom Models
-
-Replace TorchXRayVision with custom models:
-1. Implement model interface in `models/image_model.py`
-2. Update preprocessing in `models/grad_cam_tool.py`
-3. Adjust confidence thresholds in triage logic
-
-## 🧪 Testing
-
-### Sample Data
-
-Use publicly available chest X-ray datasets:
-- NIH ChestX-ray14 (public domain)
-- CheXpert (with attribution)
-- MIMIC-CXR (requires approval)
-
-### Validation
-
-```bash
-# Test with sample image
-python main.py --image data/test_xray.jpg --symptoms "test symptoms"
-
-# Check dependencies
-python -c "from utils.helpers import print_dependency_status; print_dependency_status()"
-```
-
-## 📚 References
-
-### Research Papers
-- [TorchXRayVision: A library for chest X-ray datasets and models](https://arxiv.org/abs/2111.00595)
-- [CheXpert: A Large Chest Radiograph Dataset](https://arxiv.org/abs/1901.07031)
-- [Grad-CAM: Visual Explanations from Deep Networks](https://arxiv.org/abs/1610.02391)
-
-### Datasets
-- [NIH ChestX-ray14](https://www.nih.gov/news-events/news-releases/nih-clinical-center-provides-one-largest-publicly-available-chest-x-ray-datasets-scientific-community)
-- [CheXpert](https://stanfordmlgroup.github.io/projects/chexpert/)
-- [MIMIC-CXR](https://physionet.org/content/mimic-cxr/2.0.0/)
-
-### API Resources
-- [Google AI Studio](https://makersuite.google.com/app/apikey) - Get your Google AI API key
-- [Gemini Models](https://ai.google.dev/models/gemini) - Available Gemini models
+### **Limitations**
+- **Prototype Status**: Research and development prototype
+- **Clinical Use**: Not approved for clinical decision making
+- **Validation**: Requires extensive clinical validation
+- **Expert Review**: Always requires radiologist review
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+This is a research prototype demonstrating agentic AI in medical imaging. Contributions are welcome for:
+- ReAct pattern improvements
+- Additional medical tools
+- Enhanced memory systems
+- Clinical validation studies
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## ⚠️ Regulatory Compliance
-
-### FDA Considerations
-- This is a prototype system, not FDA-cleared software
-- Clinical deployment would require 510(k) or De Novo clearance
-- Follow FDA guidelines for AI/ML medical devices
-
-### HIPAA Compliance
-- Use only de-identified data
-- Implement appropriate data protection measures
-- Follow HIPAA Privacy and Security Rules
-
-### ACR Guidelines
-- Ensure explainability and transparency
-- Document model limitations and training data
-- Provide clear disclaimers about AI assistance
-
-## 🆘 Support
-
-For issues and questions:
-1. Check the documentation
-2. Review error logs
-3. Open an issue on GitHub
-4. Contact the development team
+This project is for research and educational purposes. See LICENSE for details.
 
 ---
 
-**Remember**: This is a prototype for educational purposes. Always consult qualified healthcare professionals for medical decisions.
+**Built with ❤️ using LangGraph, ReAct, and modern AI techniques for the future of medical imaging.**
