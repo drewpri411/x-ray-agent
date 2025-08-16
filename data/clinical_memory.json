@@ -1,0 +1,725 @@
+{
+  "cases": [
+    {
+      "id": "case_1",
+      "timestamp": "2025-08-12T04:13:03.765047",
+      "findings": {
+        "Pneumonia": 0.5246506929397583,
+        "Effusion": 0.6048709750175476,
+        "Lung Opacity": 0.6327359080314636,
+        "Cardiomegaly": 0.6288658976554871,
+        "Edema": 0.5149867534637451,
+        "Consolidation": 0.5894704461097717
+      },
+      "symptoms": [],
+      "diagnosis": "unknown",
+      "confidence": 0.0,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 1 insights",
+        "Tools used: differential_diagnosis_tool",
+        "Final confidence: 0.0"
+      ]
+    },
+    {
+      "id": "case_2",
+      "timestamp": "2025-08-12T04:13:29.522778",
+      "findings": {
+        "Pneumonia": 0.5246506929397583,
+        "Effusion": 0.6048709750175476,
+        "Lung Opacity": 0.6327359080314636,
+        "Cardiomegaly": 0.6288658976554871,
+        "Edema": 0.5149867534637451,
+        "Consolidation": 0.5894704461097717
+      },
+      "symptoms": [],
+      "diagnosis": "unknown",
+      "confidence": 0.0,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 2 insights",
+        "Tools used: differential_diagnosis_tool",
+        "Final confidence: 0.0"
+      ]
+    },
+    {
+      "id": "case_3",
+      "timestamp": "2025-08-12T04:13:56.599980",
+      "findings": {
+        "Pneumonia": 0.5246506929397583,
+        "Effusion": 0.6048709750175476,
+        "Lung Opacity": 0.6327359080314636,
+        "Cardiomegaly": 0.6288658976554871,
+        "Edema": 0.5149867534637451,
+        "Consolidation": 0.5894704461097717
+      },
+      "symptoms": [],
+      "diagnosis": "unknown",
+      "confidence": 0.0,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 3 insights",
+        "Tools used: differential_diagnosis_tool",
+        "Final confidence: 0.0"
+      ]
+    },
+    {
+      "id": "case_4",
+      "timestamp": "2025-08-12T04:16:13.523631",
+      "findings": {
+        "Pneumonia": 0.5246506929397583,
+        "Effusion": 0.6048709750175476,
+        "Lung Opacity": 0.6327359080314636,
+        "Cardiomegaly": 0.6288658976554871,
+        "Edema": 0.5149867534637451,
+        "Consolidation": 0.5894704461097717
+      },
+      "symptoms": [],
+      "diagnosis": "unknown",
+      "confidence": 0.0,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 1 insights",
+        "Tools used: differential_diagnosis_tool",
+        "Final confidence: 0.0"
+      ]
+    },
+    {
+      "id": "case_5",
+      "timestamp": "2025-08-12T04:16:34.793756",
+      "findings": {
+        "Pneumonia": 0.5246506929397583,
+        "Effusion": 0.6048709750175476,
+        "Lung Opacity": 0.6327359080314636,
+        "Cardiomegaly": 0.6288658976554871,
+        "Edema": 0.5149867534637451,
+        "Consolidation": 0.5894704461097717
+      },
+      "symptoms": [],
+      "diagnosis": "unknown",
+      "confidence": 0.0,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 2 insights",
+        "Tools used: differential_diagnosis_tool",
+        "Final confidence: 0.0"
+      ]
+    },
+    {
+      "id": "case_6",
+      "timestamp": "2025-08-12T04:17:02.536278",
+      "findings": {
+        "Pneumonia": 0.5246506929397583,
+        "Effusion": 0.6048709750175476,
+        "Lung Opacity": 0.6327359080314636,
+        "Cardiomegaly": 0.6288658976554871,
+        "Edema": 0.5149867534637451,
+        "Consolidation": 0.5894704461097717
+      },
+      "symptoms": [],
+      "diagnosis": "unknown",
+      "confidence": 0.0,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 3 insights",
+        "Tools used: differential_diagnosis_tool",
+        "Final confidence: 0.0"
+      ]
+    },
+    {
+      "id": "case_7",
+      "timestamp": "2025-08-12T04:23:17.637041",
+      "findings": {
+        "Pneumonia": 0.5246506929397583,
+        "Effusion": 0.6048709750175476,
+        "Lung Opacity": 0.6327359080314636,
+        "Cardiomegaly": 0.6288658976554871,
+        "Edema": 0.5149867534637451,
+        "Consolidation": 0.5894704461097717
+      },
+      "symptoms": [],
+      "diagnosis": "unknown",
+      "confidence": 0.0,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 1 insights",
+        "Tools used: differential_diagnosis_tool",
+        "Final confidence: 0.0"
+      ]
+    },
+    {
+      "id": "case_8",
+      "timestamp": "2025-08-12T04:23:42.532079",
+      "findings": {
+        "Pneumonia": 0.5246506929397583,
+        "Effusion": 0.6048709750175476,
+        "Lung Opacity": 0.6327359080314636,
+        "Cardiomegaly": 0.6288658976554871,
+        "Edema": 0.5149867534637451,
+        "Consolidation": 0.5894704461097717
+      },
+      "symptoms": [],
+      "diagnosis": "unknown",
+      "confidence": 0.0,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 2 insights",
+        "Tools used: differential_diagnosis_tool",
+        "Final confidence: 0.0"
+      ]
+    },
+    {
+      "id": "case_9",
+      "timestamp": "2025-08-12T04:24:00.540970",
+      "findings": {
+        "Pneumonia": 0.5246506929397583,
+        "Effusion": 0.6048709750175476,
+        "Lung Opacity": 0.6327359080314636,
+        "Cardiomegaly": 0.6288658976554871,
+        "Edema": 0.5149867534637451,
+        "Consolidation": 0.5894704461097717
+      },
+      "symptoms": [],
+      "diagnosis": "unknown",
+      "confidence": 0.0,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 3 insights",
+        "Tools used: differential_diagnosis_tool",
+        "Final confidence: 0.0"
+      ]
+    },
+    {
+      "id": "case_10",
+      "timestamp": "2025-08-12T04:27:25.173819",
+      "findings": {
+        "Pneumonia": 0.5246506929397583,
+        "Effusion": 0.6048709750175476,
+        "Lung Opacity": 0.6327359080314636,
+        "Cardiomegaly": 0.6288658976554871,
+        "Edema": 0.5149867534637451,
+        "Consolidation": 0.5894704461097717
+      },
+      "symptoms": [],
+      "diagnosis": "Congestive Heart Failure (CHF)",
+      "confidence": 0.9500000000000001,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 1 insights",
+        "Tools used: ",
+        "Final confidence: 0.9500000000000001"
+      ]
+    },
+    {
+      "id": "case_11",
+      "timestamp": "2025-08-12T04:29:25.561145",
+      "findings": {
+        "Pneumonia": 0.5246506929397583,
+        "Effusion": 0.6048709750175476,
+        "Lung Opacity": 0.6327359080314636,
+        "Cardiomegaly": 0.6288658976554871,
+        "Edema": 0.5149867534637451,
+        "Consolidation": 0.5894704461097717
+      },
+      "symptoms": [],
+      "diagnosis": "Congestive Heart Failure (CHF) with Pulmonary Edema",
+      "confidence": 0.9500000000000001,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 1 insights",
+        "Tools used: ",
+        "Final confidence: 0.9500000000000001"
+      ]
+    },
+    {
+      "id": "case_12",
+      "timestamp": "2025-08-12T13:13:27.447090",
+      "findings": {
+        "Pneumonia": 0.5260450839996338,
+        "Effusion": 0.6096670627593994,
+        "Lung Opacity": 0.6333386301994324,
+        "Cardiomegaly": 0.6287609338760376,
+        "Edema": 0.5158509612083435,
+        "Consolidation": 0.5935518741607666
+      },
+      "symptoms": [],
+      "diagnosis": "Congestive Heart Failure (CHF)",
+      "confidence": 0.75,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 1 insights",
+        "Tools used: differential_diagnosis_tool, clinical_guidelines_tool, clinical_decision_rules_tool, medical_knowledge_lookup_tool",
+        "Final confidence: 0.75"
+      ]
+    },
+    {
+      "id": "case_13",
+      "timestamp": "2025-08-12T13:14:01.805508",
+      "findings": {
+        "Pneumonia": 0.5260450839996338,
+        "Effusion": 0.6096670627593994,
+        "Lung Opacity": 0.6333386301994324,
+        "Cardiomegaly": 0.6287609338760376,
+        "Edema": 0.5158509612083435,
+        "Consolidation": 0.5935518741607666
+      },
+      "symptoms": [],
+      "diagnosis": "Congestive Heart Failure (CHF)",
+      "confidence": 0.8500000000000001,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 2 insights",
+        "Tools used: differential_diagnosis_tool, clinical_guidelines_tool, clinical_decision_rules_tool, medical_knowledge_lookup_tool",
+        "Final confidence: 0.8500000000000001"
+      ]
+    },
+    {
+      "id": "case_14",
+      "timestamp": "2025-08-12T13:15:19.398790",
+      "findings": {
+        "Pneumonia": 0.6281986236572266,
+        "Effusion": 0.56307053565979,
+        "Lung Opacity": 0.6333656907081604,
+        "Cardiomegaly": 0.5095752477645874,
+        "Edema": 0.6068004965782166,
+        "Consolidation": 0.6149116158485413
+      },
+      "symptoms": [],
+      "diagnosis": "Cardiogenic Pulmonary Edema",
+      "confidence": 0.8500000000000001,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 1 insights",
+        "Tools used: ",
+        "Final confidence: 0.8500000000000001"
+      ]
+    },
+    {
+      "id": "case_15",
+      "timestamp": "2025-08-12T13:20:04.585788",
+      "findings": {
+        "Pneumonia": 0.5246506929397583,
+        "Effusion": 0.6048709750175476,
+        "Lung Opacity": 0.6327359080314636,
+        "Cardiomegaly": 0.6288658976554871,
+        "Edema": 0.5149867534637451,
+        "Consolidation": 0.5894704461097717
+      },
+      "symptoms": [],
+      "diagnosis": "Congestive Heart Failure (CHF) with Pulmonary Edema",
+      "confidence": 0.9500000000000001,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 1 insights",
+        "Tools used: differential_diagnosis_tool, severity_assessment_tool, medical_knowledge_lookup_tool, clinical_guidelines_tool, clinical_decision_rules_tool",
+        "Final confidence: 0.9500000000000001"
+      ]
+    },
+    {
+      "id": "case_16",
+      "timestamp": "2025-08-12T13:22:50.061332",
+      "findings": {
+        "Pneumonia": 0.5246506929397583,
+        "Effusion": 0.6048709750175476,
+        "Lung Opacity": 0.6327359080314636,
+        "Cardiomegaly": 0.6288658976554871,
+        "Edema": 0.5149867534637451,
+        "Consolidation": 0.5894704461097717
+      },
+      "symptoms": [],
+      "diagnosis": "Congestive Heart Failure (Cardiogenic Pulmonary Edema)",
+      "confidence": 0.9500000000000001,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 1 insights",
+        "Tools used: differential_diagnosis_tool, severity_assessment_tool, medical_knowledge_lookup_tool, clinical_guidelines_tool, clinical_decision_rules_tool",
+        "Final confidence: 0.9500000000000001"
+      ]
+    },
+    {
+      "id": "case_17",
+      "timestamp": "2025-08-12T15:21:07.533198",
+      "findings": {
+        "Pneumonia": 0.5260450839996338,
+        "Effusion": 0.6096670627593994,
+        "Lung Opacity": 0.6333386301994324,
+        "Cardiomegaly": 0.6287609338760376,
+        "Edema": 0.5158509612083435,
+        "Consolidation": 0.5935518741607666
+      },
+      "symptoms": [],
+      "diagnosis": "Congestive Heart Failure (CHF) with Pulmonary Edema",
+      "confidence": 0.9500000000000001,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 1 insights",
+        "Tools used: differential_diagnosis_tool, severity_assessment_tool, medical_knowledge_lookup_tool, clinical_guidelines_tool, clinical_decision_rules_tool",
+        "Final confidence: 0.9500000000000001"
+      ]
+    },
+    {
+      "id": "case_18",
+      "timestamp": "2025-08-12T15:56:07.358395",
+      "findings": {
+        "Pneumonia": 0.5246506929397583,
+        "Effusion": 0.6048709750175476,
+        "Lung Opacity": 0.6327359080314636,
+        "Cardiomegaly": 0.6288658976554871,
+        "Edema": 0.5149867534637451,
+        "Consolidation": 0.5894704461097717
+      },
+      "symptoms": [],
+      "diagnosis": "unknown",
+      "confidence": 0.0,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 1 insights",
+        "Tools used: differential_diagnosis_tool, severity_assessment_tool, medical_knowledge_lookup_tool",
+        "Final confidence: 0.0"
+      ]
+    },
+    {
+      "id": "case_19",
+      "timestamp": "2025-08-12T15:57:16.793387",
+      "findings": {
+        "Pneumonia": 0.5246506929397583,
+        "Effusion": 0.6048709750175476,
+        "Lung Opacity": 0.6327359080314636,
+        "Cardiomegaly": 0.6288658976554871,
+        "Edema": 0.5149867534637451,
+        "Consolidation": 0.5894704461097717
+      },
+      "symptoms": [],
+      "diagnosis": "Congestive Heart Failure (CHF) with Pulmonary Edema and Pleural Effusion",
+      "confidence": 0.9500000000000001,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 2 insights",
+        "Tools used: differential_diagnosis_tool, severity_assessment_tool, medical_knowledge_lookup_tool, clinical_guidelines_tool, clinical_decision_rules_tool",
+        "Final confidence: 0.9500000000000001"
+      ]
+    },
+    {
+      "id": "case_20",
+      "timestamp": "2025-08-12T16:17:43.862320",
+      "findings": {
+        "Pneumonia": 0.5260450839996338,
+        "Effusion": 0.6096670627593994,
+        "Lung Opacity": 0.6333386301994324,
+        "Cardiomegaly": 0.6287609338760376,
+        "Edema": 0.5158509612083435,
+        "Consolidation": 0.5935518741607666
+      },
+      "symptoms": [],
+      "diagnosis": "unknown",
+      "confidence": 0.0,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 1 insights",
+        "Tools used: differential_diagnosis_tool, severity_assessment_tool, medical_knowledge_lookup_tool",
+        "Final confidence: 0.0"
+      ]
+    },
+    {
+      "id": "case_21",
+      "timestamp": "2025-08-12T16:18:26.674769",
+      "findings": {
+        "Pneumonia": 0.5260450839996338,
+        "Effusion": 0.6096670627593994,
+        "Lung Opacity": 0.6333386301994324,
+        "Cardiomegaly": 0.6287609338760376,
+        "Edema": 0.5158509612083435,
+        "Consolidation": 0.5935518741607666
+      },
+      "symptoms": [],
+      "diagnosis": "Congestive Heart Failure (CHF)",
+      "confidence": 0.75,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 2 insights",
+        "Tools used: differential_diagnosis_tool, severity_assessment_tool, medical_knowledge_lookup_tool, clinical_guidelines_tool, clinical_decision_rules_tool",
+        "Final confidence: 0.75"
+      ]
+    },
+    {
+      "id": "case_22",
+      "timestamp": "2025-08-12T16:19:05.357723",
+      "findings": {
+        "Pneumonia": 0.5260450839996338,
+        "Effusion": 0.6096670627593994,
+        "Lung Opacity": 0.6333386301994324,
+        "Cardiomegaly": 0.6287609338760376,
+        "Edema": 0.5158509612083435,
+        "Consolidation": 0.5935518741607666
+      },
+      "symptoms": [],
+      "diagnosis": "Congestive Heart Failure (CHF)",
+      "confidence": 0.9,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 3 insights",
+        "Tools used: differential_diagnosis_tool, severity_assessment_tool, medical_knowledge_lookup_tool, clinical_guidelines_tool, clinical_decision_rules_tool",
+        "Final confidence: 0.9"
+      ]
+    },
+    {
+      "id": "case_23",
+      "timestamp": "2025-08-12T16:21:05.877759",
+      "findings": {
+        "Pneumonia": 0.5264326333999634,
+        "Effusion": 0.627583920955658,
+        "Lung Opacity": 0.6278209090232849,
+        "Cardiomegaly": 0.641226589679718,
+        "Edema": 0.5435535311698914,
+        "Consolidation": 0.581932008266449
+      },
+      "symptoms": [],
+      "diagnosis": "Congestive Heart Failure (CHF)",
+      "confidence": 0.8500000000000001,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 1 insights",
+        "Tools used: differential_diagnosis_tool, severity_assessment_tool, medical_knowledge_lookup_tool, clinical_guidelines_tool, clinical_decision_rules_tool",
+        "Final confidence: 0.8500000000000001"
+      ]
+    },
+    {
+      "id": "case_24",
+      "timestamp": "2025-08-12T16:21:29.037357",
+      "findings": {
+        "Pneumonia": 0.5122467279434204,
+        "Effusion": 0.5412636399269104,
+        "Lung Opacity": 0.5195044279098511,
+        "Cardiomegaly": 0.6270761489868164,
+        "Edema": 0.5057969689369202,
+        "Consolidation": 0.5235000848770142
+      },
+      "symptoms": [],
+      "diagnosis": "unknown",
+      "confidence": 0.0,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 1 insights",
+        "Tools used: differential_diagnosis_tool, severity_assessment_tool, medical_knowledge_lookup_tool",
+        "Final confidence: 0.0"
+      ]
+    },
+    {
+      "id": "case_25",
+      "timestamp": "2025-08-12T16:22:00.979027",
+      "findings": {
+        "Pneumonia": 0.5122467279434204,
+        "Effusion": 0.5412636399269104,
+        "Lung Opacity": 0.5195044279098511,
+        "Cardiomegaly": 0.6270761489868164,
+        "Edema": 0.5057969689369202,
+        "Consolidation": 0.5235000848770142
+      },
+      "symptoms": [],
+      "diagnosis": "Congestive Heart Failure (CHF)",
+      "confidence": 0.8,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 2 insights",
+        "Tools used: differential_diagnosis_tool, severity_assessment_tool, medical_knowledge_lookup_tool, clinical_guidelines_tool, clinical_decision_rules_tool",
+        "Final confidence: 0.8"
+      ]
+    },
+    {
+      "id": "case_26",
+      "timestamp": "2025-08-12T16:22:35.958337",
+      "findings": {
+        "Pneumonia": 0.5122467279434204,
+        "Effusion": 0.5412636399269104,
+        "Lung Opacity": 0.5195044279098511,
+        "Cardiomegaly": 0.6270761489868164,
+        "Edema": 0.5057969689369202,
+        "Consolidation": 0.5235000848770142
+      },
+      "symptoms": [],
+      "diagnosis": "Congestive Heart Failure (CHF) with Pulmonary Edema and Pleural Effusion",
+      "confidence": 0.8500000000000001,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 3 insights",
+        "Tools used: differential_diagnosis_tool, severity_assessment_tool, medical_knowledge_lookup_tool, clinical_guidelines_tool, clinical_decision_rules_tool",
+        "Final confidence: 0.8500000000000001"
+      ]
+    },
+    {
+      "id": "case_27",
+      "timestamp": "2025-08-12T16:31:44.828868",
+      "findings": {
+        "Pneumonia": 0.5627171397209167,
+        "Effusion": 0.5999665260314941,
+        "Lung Opacity": 0.5773025751113892,
+        "Cardiomegaly": 0.6561564803123474,
+        "Edema": 0.5650644898414612,
+        "Consolidation": 0.5793114900588989
+      },
+      "symptoms": [],
+      "diagnosis": "Congestive Heart Failure (CHF)",
+      "confidence": 1.0,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 1 insights",
+        "Tools used: differential_diagnosis_tool, severity_assessment_tool, medical_knowledge_lookup_tool, clinical_guidelines_tool, clinical_decision_rules_tool",
+        "Final confidence: 1.0"
+      ]
+    },
+    {
+      "id": "case_28",
+      "timestamp": "2025-08-12T16:41:23.688805",
+      "findings": {
+        "Pneumonia": 0.5020533204078674,
+        "Effusion": 0.5343794822692871,
+        "Lung Opacity": 0.5452112555503845,
+        "Cardiomegaly": 0.6489942073822021,
+        "Edema": 0.5025613903999329,
+        "Consolidation": 0.5132853984832764
+      },
+      "symptoms": [],
+      "diagnosis": "Congestive Heart Failure (CHF)",
+      "confidence": 0.8,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 1 insights",
+        "Tools used: differential_diagnosis_tool, severity_assessment_tool, medical_knowledge_lookup_tool, clinical_guidelines_tool, clinical_decision_rules_tool",
+        "Final confidence: 0.8"
+      ]
+    },
+    {
+      "id": "case_29",
+      "timestamp": "2025-08-12T16:42:21.040643",
+      "findings": {
+        "Pneumonia": 0.5020533204078674,
+        "Effusion": 0.5343794822692871,
+        "Lung Opacity": 0.5452112555503845,
+        "Cardiomegaly": 0.6489942073822021,
+        "Edema": 0.5025613903999329,
+        "Consolidation": 0.5132853984832764
+      },
+      "symptoms": [],
+      "diagnosis": "Congestive Heart Failure (CHF)",
+      "confidence": 0.9500000000000001,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 2 insights",
+        "Tools used: differential_diagnosis_tool, severity_assessment_tool, medical_knowledge_lookup_tool, clinical_guidelines_tool, clinical_decision_rules_tool",
+        "Final confidence: 0.9500000000000001"
+      ]
+    },
+    {
+      "id": "case_30",
+      "timestamp": "2025-08-12T18:00:31.558641",
+      "findings": {
+        "Pneumonia": 0.5627171397209167,
+        "Effusion": 0.5999665260314941,
+        "Lung Opacity": 0.5773025751113892,
+        "Cardiomegaly": 0.6561564803123474,
+        "Edema": 0.5650644898414612,
+        "Consolidation": 0.5793114900588989
+      },
+      "symptoms": [],
+      "diagnosis": "Congestive Heart Failure (CHF) with Pulmonary Edema",
+      "confidence": 0.8,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 1 insights",
+        "Tools used: differential_diagnosis_tool, severity_assessment_tool, medical_knowledge_lookup_tool, clinical_guidelines_tool, clinical_decision_rules_tool",
+        "Final confidence: 0.8"
+      ]
+    },
+    {
+      "id": "case_31",
+      "timestamp": "2025-08-12T18:01:20.053608",
+      "findings": {
+        "Pneumonia": 0.5627171397209167,
+        "Effusion": 0.5999665260314941,
+        "Lung Opacity": 0.5773025751113892,
+        "Cardiomegaly": 0.6561564803123474,
+        "Edema": 0.5650644898414612,
+        "Consolidation": 0.5793114900588989
+      },
+      "symptoms": [],
+      "diagnosis": "Congestive Heart Failure (CHF) with Pulmonary Edema and Pleural Effusion",
+      "confidence": 0.8500000000000001,
+      "severity": "moderate",
+      "outcome": "",
+      "learnings": [
+        "Iteration 2 insights",
+        "Tools used: differential_diagnosis_tool, severity_assessment_tool, medical_knowledge_lookup_tool, clinical_guidelines_tool, clinical_decision_rules_tool",
+        "Final confidence: 0.8500000000000001"
+      ]
+    }
+  ],
+  "patterns": {},
+  "statistics": {
+    "total_cases": 31,
+    "diagnoses": {
+      "unknown": 12,
+      "Congestive Heart Failure (CHF)": 10,
+      "Congestive Heart Failure (CHF) with Pulmonary Edema": 4,
+      "Cardiogenic Pulmonary Edema": 1,
+      "Congestive Heart Failure (Cardiogenic Pulmonary Edema)": 1,
+      "Congestive Heart Failure (CHF) with Pulmonary Edema and Pleural Effusion": 3
+    },
+    "common_findings": {
+      "Pneumonia": {
+        "count": 31,
+        "avg_score": 0.5293439030647278
+      },
+      "Effusion": {
+        "count": 31,
+        "avg_score": 0.5940054059028625
+      },
+      "Lung Opacity": {
+        "count": 31,
+        "avg_score": 0.6107452511787415
+      },
+      "Cardiomegaly": {
+        "count": 31,
+        "avg_score": 0.6291626691818237
+      },
+      "Edema": {
+        "count": 31,
+        "avg_score": 0.522192656993866
+      },
+      "Consolidation": {
+        "count": 31,
+        "avg_score": 0.5785554051399231
+      }
+    }
+  },
+  "last_updated": "2025-08-12T04:12:35.464179"
+}
